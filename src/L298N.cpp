@@ -20,7 +20,7 @@
 MCONTROL::MCONTROL(){}
 
 MCONTROL::
-MCONTROL(byte ardpinENA, byte ardpinIN1, byte ardpinIN2)
+MCONTROL(uint8_t ardpinENA, uint8_t ardpinIN1, uint8_t ardpinIN2)
 {
   ENA = ardpinENA;
   IN1 = ardpinIN1;
@@ -54,16 +54,18 @@ void MCONTROL::reverse() {command(LOW, HIGH);}
 void MCONTROL::halt(){command(HIGH, HIGH);}
 void MCONTROL::freerun() {command(LOW, LOW);}
 
+
 void MCONTROL::
 setTerminalCommands(
-  byte fr, byte rev,
-  byte st , byte frun) 
+  uint8_t fr, uint8_t rev,
+  uint8_t st, uint8_t frun) 
 {
   comForward = fr;
   comReverse = rev;
   comHalt = st;
   comFreerun = frun;
 }
+
 
 void MCONTROL::
 serialTest() 
@@ -101,7 +103,7 @@ serialTest()
 }
 
 void MCONTROL::
-command(byte in1, byte in2) 
+command(uint8_t in1, uint8_t in2) 
 {
   digitalWrite(IN1, in1);
   digitalWrite(IN2, in2);

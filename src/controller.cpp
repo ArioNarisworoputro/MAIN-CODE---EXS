@@ -73,6 +73,38 @@ void clickRIGHT()
 }
 
 
+int prevJoyState = 1;
 void joystickMOVE(int analogX, int analogY){
 
+    // Divide x joystick to 3 different states
+    // 0 - Forward 
+    // 1 - Halt 
+    // 2 - Reverse
+    int xstate = map(analogX, 0, 1023, 0, 2);
+    //int ystate = map(analogY, 0, 1023, 0, 2);
+
+    // Dont run commands if we are still on the same joystick state
+    // Prevent commands running more than once
+    if (xstate == prevJoyState)
+    {
+        return;
+    }
+
+    switch (xstate)
+    {
+    case 0:
+        MotorA.forward();
+        break;
+
+    case 1:
+        MotorA.halt();
+        break;
+
+    case 2:
+        MotorA.reverse();
+        break;
+    }
+
+    // Update prev joy state
+    prevJoyState = xstate;
 }
