@@ -17,17 +17,17 @@
 // 12V Power Supply GND/- terminal to L298N GND conn 
 // Arduino GND pin to L298N GND conn (sharing it with 12V pwoer supply - terminal)
 
-MCONTROL::MCONTROL(){}
 
-MCONTROL::
-MCONTROL(uint8_t ardpinENA, uint8_t ardpinIN1, uint8_t ardpinIN2)
+MOTOR::
+MOTOR(uint8_t ardpinENA, uint8_t ardpinIN1, uint8_t ardpinIN2)
 {
   ENA = ardpinENA;
   IN1 = ardpinIN1;
   IN2 = ardpinIN2;
 }
 
-void MCONTROL::
+
+void MOTOR::
 setup() 
 {
   // Set these arduino pins as output
@@ -49,13 +49,21 @@ setup()
   setTerminalCommands(1, 2, 3, 4);
 }
 
-void MCONTROL::forward() {command(HIGH, LOW);}
-void MCONTROL::reverse() {command(LOW, HIGH);}
-void MCONTROL::halt(){command(HIGH, HIGH);}
-void MCONTROL::freerun() {command(LOW, LOW);}
+
+// Motor Commands
+void MOTOR::forward() {command(HIGH, LOW);}
+void MOTOR::reverse() {command(LOW, HIGH);}
+void MOTOR::halt(){command(HIGH, HIGH);}
+void MOTOR::freerun() {command(LOW, LOW);}
+void MOTOR::
+command(uint8_t in1, uint8_t in2) 
+{
+  digitalWrite(IN1, in1);
+  digitalWrite(IN2, in2);
+}
 
 
-void MCONTROL::
+void MOTOR::
 setTerminalCommands(
   uint8_t fr, uint8_t rev,
   uint8_t st, uint8_t frun) 
@@ -67,7 +75,7 @@ setTerminalCommands(
 }
 
 
-void MCONTROL::
+void MOTOR::
 serialTest() 
 {
   if (Serial.available() > 0) {
@@ -100,11 +108,4 @@ serialTest()
       while (Serial.available() > 0);
     }
   }
-}
-
-void MCONTROL::
-command(uint8_t in1, uint8_t in2) 
-{
-  digitalWrite(IN1, in1);
-  digitalWrite(IN2, in2);
 }

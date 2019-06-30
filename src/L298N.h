@@ -2,13 +2,13 @@
 #define L298N_h
 
 #include "Arduino.h"
+#include "callbackfunc.h"
 
-class MCONTROL {
+class MOTOR {
 
   public:
   // Constructor and initial setup
-    MCONTROL();
-    MCONTROL(uint8_t ardpinENA, uint8_t ardpinIN1, uint8_t ardpinIN2);
+    MOTOR(uint8_t ardpinENA, uint8_t ardpinIN1, uint8_t ardpinIN2);
     void setup();
 
     // Motor Commands

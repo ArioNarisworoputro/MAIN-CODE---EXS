@@ -1,53 +1,52 @@
 #ifndef controller_h
 #define controller_h
 
-#include <Arduino.h>
-#include "OneButton.h"
 #include "L298N.h"
+#include "OneButton.h"
+#include "Joystick.h"
 
-// Commands/Functions to be attached to buttons and joystick
-void clickUP();
-void clickLEFT();
-void clickDOWN();
-void clickRIGHT();
-void joystickMOVE(int analogX, int analogY);
 
-// Callback function for joystick
-// To pass on functions as an argument to another function
-extern "C"{
-  typedef void (*joycallback)(int valJX, int valJY);
+// Motor
+MOTOR O_motor = MOTOR(10, 9, 8);
+void motor1_forward(){O_motor.forward();}
+void motor1_reverse(){O_motor.reverse();}
+void motor1_halt(){O_motor.halt();}
+void motor1_freerun(){O_motor.freerun();}
+
+
+// Controller
+OneButton O_btnFW = OneButton(13, true, true);
+OneButton O_btnRV = OneButton(12, true, true);
+OneButton O_btnHL = OneButton(11, true, true);
+OneButton O_btnFR = OneButton(7, true, true);
+JOYSTICK O_joyStick = JOYSTICK(A0, A1);
+
+
+// Controller Setups
+void setup_controller_btn()
+{
+  O_btnFW.attachClick(motor1_forward);
+  O_btnRV.attachClick(motor1_reverse);
+  O_btnHL.attachClick(motor1_halt);
+  O_btnFR.attachClick(motor1_freerun);
 }
 
-class CONTROLLER {
 
-  public:
-    CONTROLLER(uint8_t ardpinUP, uint8_t ardpinLEFT,
-        uint8_t ardpinDOWN,uint8_t ardpinRIGHT,
-        uint8_t ardpinJX, uint8_t ardpinJY);
-    
-    // Attach main commands to buttons and joystick
-    // Call controlLoop() inside main.cpp loop() please
-    void attachMotor(uint8_t ardpinENA, uint8_t ardpinIN1, uint8_t ardpinIN2);
-    void attachCommands();
-    void controlLoop();
+void setup_controller_joy()
+{
+  O_joyStick.attachNeutral(motor1_halt);
+  O_joyStick.attachLeft(motor1_forward);
+  O_joyStick.attachRight(motor1_reverse);
+}
 
-    // Enabling and disabling buttons/joystick inputs
-    //void enableButtons();
-    //void disableButtons();
-    //void enableJoystick();
-    //void disableJoystick();
 
-  private:
-    OneButton btnUP;
-    OneButton btnLEFT;
-    OneButton btnDOWN;
-    OneButton btnRIGHT;
-    OneButton btnJC;
-    joycallback _joyCommand;
-    uint8_t bEnable;
-    uint8_t jEnable;
-    uint8_t joyX;
-    uint8_t joyY;
-};
+void loop_controller(){
+    O_btnFW.tick();
+    O_btnRV.tick();
+    O_btnHL.tick();
+    O_btnFR.tick();
+    O_joyStick.read();
+    O_joyStick.tick();
+}
 
 #endif
